@@ -1,5 +1,6 @@
 ﻿using FinancialPortalAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Npgsql;
 using System;
@@ -17,17 +18,37 @@ namespace FinancialPortalAPI.Data
     {
     }
 
-    // TODO: make all methods that getalldbscripts()
-    public List<PortalUser> GetAllUsersAsync(string conn)
+    public List<Household> GetAllHouseholdData(IConfiguration configuration)
     {
-      var connString = new NpgsqlConnection(conn);
+      // Get connection string
+      var connString = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+      // Open the connection to the db
       connString.Open();
-      using var command = new NpgsqlCommand("getallusers", connString);
-      using NpgsqlDataReader reader = command.ExecuteReader();
 
-      var dataTable = new DataTable();
-      dataTable.Load(reader);
-      return (List<PortalUser>)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(dataTable), typeof(List<PortalUser>));
+      // get a variable to stuff our data into once it comes back from the db
+      var allHouseHolds = new List<Household>();
+
+      // tell npgsql which function to execute on the db
+      using (var cmd = new NpgsqlCommand("getallhouseholds", connString))
+      {
+        // let postgres know that this is a stored procedure
+        cmd.CommandType = CommandType.StoredProcedure;
+
+        // Read data from the db
+        using (var reader = cmd.ExecuteReader())
+        {
+          var dataTable = new DataTable();
+          dataTable.Load(reader);
+          if (dataTable.Rows.Count > 0)
+          {
+            // Serialize and stuff the data in our variable
+            var serializedObjects = JsonConvert.SerializeObject(dataTable);
+            allHouseHolds.AddRange((List<Household>)JsonConvert.DeserializeObject(serializedObjects, typeof(List<Household>)));
+          }
+        }
+        connString.Close();
+      }
+      return allHouseHolds;
     }
 
   }
