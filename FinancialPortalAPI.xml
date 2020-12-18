@@ -4,5 +4,12 @@
         <name>FinancialPortalAPI</name>
     </assembly>
     <members>
+        <member name="M:FinancialPortalAPI.Utilities.DataHelper.BuildConnectionString(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="databaseUrl"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

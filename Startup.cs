@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FinancialPortalAPI.Utilities;
 
 namespace FinancialPortalAPI
 {
@@ -31,7 +32,7 @@ namespace FinancialPortalAPI
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<ApiContext>(options => 
-        options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(DataHelper.GetConnectionString(Configuration))); 
 
       services.AddControllers();
 
@@ -39,7 +40,7 @@ namespace FinancialPortalAPI
         c.SwaggerDoc("v1", new OpenApiInfo { 
           Version = "v1",
           Title = "Financial Portal API",
-          Description = "Api Endpoint for Rock Hard Finance",
+          Description = "Api Endpoint for Rock Hard Finance", 
           Contact = new OpenApiContact
           {
             Name = "Denis Jojot",
