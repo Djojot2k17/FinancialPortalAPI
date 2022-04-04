@@ -39,8 +39,8 @@ namespace FinancialPortalAPI
       services.AddSwaggerGen(c => {
         c.SwaggerDoc("v1", new OpenApiInfo { 
           Version = "v1",
-          Title = "Financial Portal API",
-          Description = "Api Endpoint for Rock Hard Finance", 
+          Title = "Spa Finance API",
+          Description = "Api Endpoint for Spa Finance", 
           Contact = new OpenApiContact
           {
             Name = "Denis Jojot",
